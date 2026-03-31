@@ -3,189 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MilitaryRP: Война в Ираке - Loading Screen</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;900&display=swap" rel="stylesheet">
+    <title>MilitaryRP Terminal - Iraq</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-            user-select: none;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
 
         body {
-            background-color: #050a0f;
-            color: white;
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
+            background-color: #020406;
+            color: white; overflow: hidden;
+            width: 100vw; height: 100vh;
+            font-family: 'Montserrat', sans-serif;
+            opacity: 0; animation: screenOn 1.5s ease-out forwards;
         }
 
-        /* ФОН - Прямая ссылка на атмосферное фото конвоя в пустыне */
-        .background {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://images.unsplash.com/photo-1579970929559-86ab723b7156?q=80&w=1920&auto=format&fit=crop'); 
-            background-size: cover;
-            background-position: center;
-            filter: blur(3px) brightness(0.5);
+        @keyframes screenOn {
+            0% { opacity: 0; filter: brightness(0) contrast(1.5); }
+            100% { opacity: 1; filter: brightness(1) contrast(1); }
+        }
+
+        /* Железобетонная прямая ссылка на фото из Ирака */
+        .bg-image {
+            position: absolute; top: -5%; left: -5%; width: 110%; height: 110%;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/M1A1_Abrams_in_Fallujah.jpg/1920px-M1A1_Abrams_in_Fallujah.jpg'); 
+            background-size: cover; background-position: center;
+            filter: blur(5px) brightness(0.35);
             z-index: 1;
-            animation: zoomBg 25s infinite alternate linear;
+            will-change: transform; transform: translateZ(0);
+            animation: panBg 40s infinite alternate linear;
         }
 
-        @keyframes zoomBg {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.08); }
+        @keyframes panBg {
+            0% { transform: scale(1) translateZ(0); }
+            100% { transform: scale(1.08) translateZ(0); }
         }
 
-        /* ТАКТИЧЕСКИЙ ОВЕРЛЕЙ (Сетка и затемнение по краям) */
-        .overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(5, 10, 20, 0.8) 0%, rgba(5, 10, 20, 0.1) 50%, rgba(5, 10, 20, 0.95) 100%);
-            z-index: 2;
+        /* Виньетка и сетка для тактического стиля */
+        .tactical-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.85) 100%),
+                linear-gradient(rgba(10, 15, 20, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
+            background-size: 100% 100%, 100% 4px;
+            z-index: 2; pointer-events: none;
         }
 
-        /* ОСНОВНОЙ КОНТЕЙНЕР */
-        .container {
-            position: relative;
-            z-index: 3;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 60px;
+        /* Угловые прицелы HUD */
+        .hud-corner {
+            position: absolute; width: 100px; height: 100px; z-index: 3;
+            border: 3px solid #d35400; opacity: 0.7;
+        }
+        .hud-tl { top: 30px; left: 30px; border-right: none; border-bottom: none; }
+        .hud-tr { top: 30px; right: 30px; border-left: none; border-bottom: none; }
+        .hud-bl { bottom: 30px; left: 30px; border-right: none; border-top: none; }
+        .hud-br { bottom: 30px; right: 30px; border-left: none; border-top: none; }
+
+        .layout {
+            position: relative; z-index: 4;
+            display: flex; flex-direction: column; justify-content: space-between;
+            width: 100%; height: 100%; padding: 60px;
         }
 
         /* ШАПКА */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+        .top-panel { display: flex; justify-content: space-between; align-items: stretch; }
+
+        .logo-box { display: flex; flex-direction: column; }
+        .logo-box h1 {
+            font-size: 80px; font-weight: 900; text-transform: uppercase;
+            color: #fff; text-shadow: 0 0 20px rgba(0,0,0,1); line-height: 0.9;
+            letter-spacing: 2px;
+        }
+        .logo-box h1 span { color: #d35400; text-shadow: 0 0 20px rgba(211, 84, 0, 0.6); }
+        .logo-box p {
+            font-family: 'Share Tech Mono', monospace; color: #7f8c8d;
+            font-size: 18px; letter-spacing: 6px; margin-top: 10px;
         }
 
-        .server-title h1 {
-            font-size: 70px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 6px;
-            color: #ecf0f1;
-            text-shadow: 0 0 25px rgba(0,0,0,0.9);
+        /* ИНФО О СЕРВЕРЕ (Скошенный стиль) */
+        .server-stats {
+            display: flex; gap: 15px;
+        }
+        .stat-block {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(211, 84, 0, 0.3);
+            border-left: 4px solid #d35400;
+            padding: 15px 30px;
+            display: flex; flex-direction: column; justify-content: center;
+            transform: skewX(-10deg);
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+        }
+        .stat-block div { transform: skewX(10deg); }
+        .stat-label { font-family: 'Share Tech Mono', monospace; color: #e67e22; font-size: 12px; }
+        .stat-value { font-size: 24px; font-weight: 900; color: #fff; margin-top: 5px; }
+
+        /* ЦЕНТР (Правила и Терминал логов) */
+        .mid-panel {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-bottom: 40px; height: 300px;
         }
 
-        .server-title h1 span {
-            color: #d35400; /* Цвет раскаленного песка */
-        }
-
-        .server-title p {
-            font-size: 22px;
-            font-weight: 600;
-            color: #bdc3c7;
-            letter-spacing: 4px;
-            margin-top: -5px;
-        }
-
-        /* ИНФОРМАЦИЯ О КАРТЕ И СЛОТАХ */
-        .info-box {
-            background: rgba(15, 20, 30, 0.7);
-            backdrop-filter: blur(12px);
-            padding: 20px 35px;
-            border-left: 5px solid #d35400;
-            border-radius: 0 12px 12px 0;
-            text-align: right;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .info-box .label {
-            font-size: 13px;
-            color: #95a5a6;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .info-box .value {
-            font-size: 26px;
-            font-weight: 900;
-            color: white;
-            margin-bottom: 12px;
-        }
-        
-        .info-box .value:last-child {
-            margin-bottom: 0;
-        }
-
-        /* ЦЕНТРАЛЬНАЯ ЧАСТЬ (Особенности сервера) */
-        .features {
-            display: flex;
-            gap: 25px;
-            margin-top: auto;
-            margin-bottom: 70px;
-        }
-
+        /* КАРТОЧКИ ИНФОРМАЦИИ */
+        .info-cards { display: flex; gap: 20px; }
         .card {
-            background: rgba(15, 20, 30, 0.7);
-            backdrop-filter: blur(12px);
-            padding: 25px;
-            border-radius: 10px;
-            width: 340px;
-            border: 1px solid rgba(255,255,255,0.03);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: transform 0.3s ease;
+            background: linear-gradient(135deg, rgba(15,15,15,0.9) 0%, rgba(5,5,5,0.9) 100%);
+            border-top: 3px solid #d35400;
+            padding: 25px; width: 300px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+            position: relative; overflow: hidden;
         }
-
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(211, 84, 0, 0.4);
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.02) 10px, rgba(255,255,255,0.02) 20px);
         }
+        .card h3 { color: #fff; font-size: 18px; margin-bottom: 10px; text-transform: uppercase; position: relative; }
+        .card p { color: #95a5a6; font-size: 14px; line-height: 1.6; position: relative; }
 
-        .card h3 {
-            color: #d35400;
-            margin-bottom: 12px;
-            font-size: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        /* ТЕРМИНАЛ ЗАГРУЗКИ (Живой лог) */
+        .terminal-box {
+            background: rgba(5, 5, 5, 0.85);
+            border: 1px solid #333; border-top: 3px solid #7f8c8d;
+            width: 450px; height: 100%; padding: 20px;
+            display: flex; flex-direction: column;
+            box-shadow: inset 0 0 20px rgba(0,0,0,1);
         }
-
-        .card p {
-            color: #bdc3c7;
-            font-size: 15px;
-            line-height: 1.6;
+        .terminal-header {
+            font-family: 'Share Tech Mono', monospace; color: #bdc3c7; font-size: 14px;
+            border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 10px;
         }
-
-        /* НИЖНЯЯ ПАНЕЛЬ (Прогресс-бар скачивания) */
-        .footer {
-            width: 100%;
+        .terminal-log {
+            flex-grow: 1; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: flex-end;
         }
-
-        .status-text {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-weight: 600;
-            font-size: 18px;
-            color: #ecf0f1;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+        .terminal-log p {
+            font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #2ecc71;
+            margin-bottom: 4px; line-height: 1.2;
+            text-shadow: 0 0 5px rgba(46, 204, 113, 0.4);
         }
+        .terminal-log p.sys { color: #e67e22; }
 
+        /* НИЗ (Прогресс-бар) */
+        .bottom-panel { width: 100%; }
+        .progress-header {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-bottom: 10px;
+        }
+        .status-main { font-size: 20px; font-weight: 700; color: #fff; text-transform: uppercase; }
+        .percentage { font-family: 'Share Tech Mono', monospace; font-size: 28px; font-weight: 700; color: #d35400; }
+        
         .progress-container {
-            width: 100%;
-            height: 10px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 5px;
-            overflow: hidden;
-            position: relative;
-            border: 1px solid rgba(255,255,255,0.1);
+            width: 100%; height: 12px; background: rgba(0,0,0,0.8);
+            border: 1px solid #333; padding: 2px;
         }
-
         .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #d35400, #f39c12);
-            box-shadow: 0 0 20px rgba(211, 84, 0, 0.8);
-            transition: width 0.3s ease-out;
+            height: 100%; width: 0%;
+            background: #d35400;
+            box-shadow: 0 0 15px #d35400;
+            transition: width 0.1s linear;
         }
     </style>
 </head>
@@ -195,91 +168,122 @@
         <source src="https://upload.wikimedia.org/wikipedia/commons/3/30/The_Star_Spangled_Banner_%28United_States_Navy_Band%29.ogg" type="audio/ogg">
     </audio>
 
-    <div class="background"></div>
-    <div class="overlay"></div>
+    <div class="bg-image"></div>
+    <div class="tactical-overlay"></div>
 
-    <div class="container">
-        <div class="header">
-            <div class="server-title">
+    <div class="hud-corner hud-tl"></div>
+    <div class="hud-corner hud-tr"></div>
+    <div class="hud-corner hud-bl"></div>
+    <div class="hud-corner hud-br"></div>
+
+    <div class="layout">
+        
+        <div class="top-panel">
+            <div class="logo-box">
                 <h1>Война в <span>Ираке</span></h1>
-                <p>MILITARY ROLEPLAY</p>
+                <p>SECURE MILITARY NETWORK // AUTHENTICATED</p>
             </div>
-            <div class="info-box">
-                <div class="label">Дислокация (Карта)</div>
-                <div class="value" id="mapName">Установка связи...</div>
-                <div class="label">Слоты Батальона</div>
-                <div class="value" id="maxPlayers">-- / --</div>
-            </div>
-        </div>
-
-        <div class="features">
-            <div class="card">
-                <h3>РФ против USA</h3>
-                <p>Выбери свою сторону в глобальном конфликте. Развивайся внутри уникальных специализаций и подразделений Вооруженных Сил, выполняя боевые задачи командования.</p>
-            </div>
-            <div class="card">
-                <h3>Глубокая Логистика</h3>
-                <p>Техника не берется из воздуха. Контролируйте склады, перевозите топливо и материалы, доставляя коробки с провизией на передовую для спавна боевых машин.</p>
-            </div>
-            <div class="card">
-                <h3>Интерактивная Техника</h3>
-                <p>Взаимодействуй с транспортом через современное круговое меню. Быстрая посадка, настройка дополнений и полный физический контроль над погрузкой грузов.</p>
+            <div class="server-stats">
+                <div class="stat-block">
+                    <div>
+                        <div class="stat-label">ОПЕРАЦИОННАЯ ЗОНА</div>
+                        <div class="stat-value" id="mapName">ПОДКЛЮЧЕНИЕ...</div>
+                    </div>
+                </div>
+                <div class="stat-block">
+                    <div>
+                        <div class="stat-label">ЛИЧНЫЙ СОСТАВ</div>
+                        <div class="stat-value" id="maxPlayers">-- / --</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="footer">
-            <div class="status-text">
-                <span id="statusLabel">Получение секретных данных штаба...</span>
-                <span id="percentage">0%</span>
+        <div class="mid-panel">
+            <div class="info-cards">
+                <div class="card">
+                    <h3>РФ против USA</h3>
+                    <p>Асимметричный конфликт. Выбери сторону, повышай звание и получай доступ к элитному вооружению и технике подразделения.</p>
+                </div>
+                <div class="card">
+                    <h3>Снабжение Армии</h3>
+                    <p>Транспорт и ресурсы требуют контроля. Доставляй провизию на передовую, используй склады для поддержания боеспособности.</p>
+                </div>
+            </div>
+
+            <div class="terminal-box">
+                <div class="terminal-header">СТАТУС: ПРИЕМ ДАННЫХ ШТАБА...</div>
+                <div class="terminal-log" id="logContainer">
+                    <p class="sys">> Установка защищенного соединения...</p>
+                    <p class="sys">> Проверка целостности файлов...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-panel">
+            <div class="progress-header">
+                <div class="status-main" id="statusLabel">СИНХРОНИЗАЦИЯ БАЗЫ ДАННЫХ...</div>
+                <div class="percentage" id="percentage">0%</div>
             </div>
             <div class="progress-container">
                 <div class="progress-bar" id="progressBar"></div>
             </div>
         </div>
+
     </div>
 
     <script>
-        // Громкость фоновой музыки (0.15 = 15%)
         document.getElementById("bgMusic").volume = 0.15;
-
-        var filesTotal = 0;
+        var filesTotal = 0; 
         var filesNeeded = 0;
+        var logBox = document.getElementById("logContainer");
 
-        // Эту функцию вызывает GMod при коннекте
+        // Функция добавления строк в терминал (эффект консоли)
+        function addLog(text, isSystem = false) {
+            var p = document.createElement("p");
+            p.innerText = "> " + text;
+            if (isSystem) p.className = "sys";
+            logBox.appendChild(p);
+            
+            // Удаляем старые строки, чтобы терминал не растягивался
+            if (logBox.children.length > 8) {
+                logBox.removeChild(logBox.firstChild);
+            }
+        }
+
+        // Обновление данных о сервере
         function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode) {
             document.getElementById('mapName').innerText = mapname;
-            document.getElementById('maxPlayers').innerText = maxplayers + " Человек";
+            document.getElementById('maxPlayers').innerText = maxplayers + " СЛОТОВ";
+            addLog("Получены данные операции: " + mapname, true);
         }
 
-        // Обновление статуса (загрузка файлов, отправка инфы клиенту)
-        function SetStatusChanged(status) {
-            document.getElementById('statusLabel').innerText = status;
+        // Смена главного статуса загрузки
+        function SetStatusChanged(status) { 
+            document.getElementById('statusLabel').innerText = status.toUpperCase(); 
+            addLog("SYS: " + status, true);
         }
 
-        // Вызывается при скачивании конкретного файла аддона
+        // Процесс скачивания файла
         function DownloadingFile(fileName) {
             var shortName = fileName.split('/').pop();
-            document.getElementById('statusLabel').innerText = "Загрузка: " + shortName;
+            addLog("GET " + shortName);
         }
 
-        // Общее количество файлов для скачивания
-        function SetFilesTotal(total) {
-            filesTotal = total;
+        function SetFilesTotal(total) { filesTotal = total; }
+        
+        function SetFilesNeeded(needed) { 
+            filesNeeded = needed; 
+            updateProgress(); 
         }
 
-        // Сколько файлов осталось скачать
-        function SetFilesNeeded(needed) {
-            filesNeeded = needed;
-            updateProgress();
-        }
-
-        // Логика заполнения полоски
+        // Обновление прогресс-бара
         function updateProgress() {
             if (filesTotal > 0) {
                 var filesDownloaded = filesTotal - filesNeeded;
                 var percentage = Math.round((filesDownloaded / filesTotal) * 100);
                 
-                if (percentage > 100) percentage = 100;
+                if (percentage > 100) percentage = 100; 
                 if (percentage < 0) percentage = 0;
 
                 document.getElementById('progressBar').style.width = percentage + "%";
