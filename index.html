@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MilitaryRP Terminal - Iraq</title>
+    <title>MilitaryRP Terminal - V2</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     
     <style>
@@ -22,133 +22,131 @@
             100% { opacity: 1; filter: brightness(1) contrast(1); }
         }
 
-        /* Железобетонная прямая ссылка на фото из Ирака */
+        /* БЕРЕМ КАРТИНКУ ПРЯМО ИЗ ТВОЕЙ ПАПКИ НА GITHUB */
         .bg-image {
             position: absolute; top: -5%; left: -5%; width: 110%; height: 110%;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/M1A1_Abrams_in_Fallujah.jpg/1920px-M1A1_Abrams_in_Fallujah.jpg'); 
+            background-color: #111; /* Резервный цвет */
+            background-image: url('bg.jpg'); 
             background-size: cover; background-position: center;
-            filter: blur(5px) brightness(0.35);
+            filter: blur(4px) brightness(0.4);
             z-index: 1;
             will-change: transform; transform: translateZ(0);
-            animation: panBg 40s infinite alternate linear;
+            animation: panBg 30s infinite alternate ease-in-out;
         }
 
         @keyframes panBg {
             0% { transform: scale(1) translateZ(0); }
-            100% { transform: scale(1.08) translateZ(0); }
+            100% { transform: scale(1.05) translateZ(0); }
         }
 
-        /* Виньетка и сетка для тактического стиля */
+        /* Тактическая сетка и затемнение */
         .tactical-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: 
-                radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.85) 100%),
-                linear-gradient(rgba(10, 15, 20, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
+                radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%),
+                linear-gradient(rgba(10, 15, 20, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
             background-size: 100% 100%, 100% 4px;
             z-index: 2; pointer-events: none;
         }
 
-        /* Угловые прицелы HUD */
-        .hud-corner {
-            position: absolute; width: 100px; height: 100px; z-index: 3;
-            border: 3px solid #d35400; opacity: 0.7;
+        /* АНИМИРОВАННЫЙ РАДАР */
+        .radar-container {
+            position: absolute; top: 40px; right: 50px; z-index: 3;
+            width: 120px; height: 120px;
+            border: 2px solid rgba(211, 84, 0, 0.5);
+            border-radius: 50%; background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 20px rgba(211, 84, 0, 0.2);
+            overflow: hidden;
         }
-        .hud-tl { top: 30px; left: 30px; border-right: none; border-bottom: none; }
-        .hud-tr { top: 30px; right: 30px; border-left: none; border-bottom: none; }
-        .hud-bl { bottom: 30px; left: 30px; border-right: none; border-top: none; }
-        .hud-br { bottom: 30px; right: 30px; border-left: none; border-top: none; }
+        .radar-container::after {
+            content: ''; position: absolute; width: 100%; height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 49%, rgba(211, 84, 0, 0.3) 50%, transparent 51%),
+                linear-gradient(0deg, transparent 49%, rgba(211, 84, 0, 0.3) 50%, transparent 51%);
+        }
+        .radar-sweep {
+            position: absolute; top: 0; left: 0; width: 50%; height: 50%;
+            background: linear-gradient(45deg, transparent 30%, rgba(211, 84, 0, 0.6) 100%);
+            transform-origin: bottom right;
+            animation: radarSpin 3s linear infinite;
+        }
+        @keyframes radarSpin { 100% { transform: rotate(360deg); } }
 
+        /* ОГРАНИЧИТЕЛЬ СНИЗУ */
         .layout {
             position: relative; z-index: 4;
             display: flex; flex-direction: column; justify-content: space-between;
-            width: 100%; height: 100%; padding: 60px;
+            width: 100%; height: 100%; 
+            padding: 50px 50px 130px 50px; 
         }
 
         /* ШАПКА */
         .top-panel { display: flex; justify-content: space-between; align-items: stretch; }
 
-        .logo-box { display: flex; flex-direction: column; }
         .logo-box h1 {
-            font-size: 80px; font-weight: 900; text-transform: uppercase;
+            font-size: 75px; font-weight: 900; text-transform: uppercase;
             color: #fff; text-shadow: 0 0 20px rgba(0,0,0,1); line-height: 0.9;
             letter-spacing: 2px;
         }
         .logo-box h1 span { color: #d35400; text-shadow: 0 0 20px rgba(211, 84, 0, 0.6); }
         .logo-box p {
             font-family: 'Share Tech Mono', monospace; color: #7f8c8d;
-            font-size: 18px; letter-spacing: 6px; margin-top: 10px;
+            font-size: 16px; letter-spacing: 4px; margin-top: 10px;
         }
 
-        /* ИНФО О СЕРВЕРЕ (Скошенный стиль) */
-        .server-stats {
-            display: flex; gap: 15px;
-        }
-        .stat-block {
-            background: rgba(10, 10, 10, 0.8);
-            border: 1px solid rgba(211, 84, 0, 0.3);
-            border-left: 4px solid #d35400;
-            padding: 15px 30px;
-            display: flex; flex-direction: column; justify-content: center;
-            transform: skewX(-10deg);
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
-        }
-        .stat-block div { transform: skewX(10deg); }
-        .stat-label { font-family: 'Share Tech Mono', monospace; color: #e67e22; font-size: 12px; }
-        .stat-value { font-size: 24px; font-weight: 900; color: #fff; margin-top: 5px; }
-
-        /* ЦЕНТР (Правила и Терминал логов) */
+        /* ЦЕНТР */
         .mid-panel {
             display: flex; justify-content: space-between; align-items: flex-end;
-            margin-bottom: 40px; height: 300px;
+            margin-bottom: 20px; height: 320px;
         }
 
-        /* КАРТОЧКИ ИНФОРМАЦИИ */
-        .info-cards { display: flex; gap: 20px; }
-        .card {
-            background: linear-gradient(135deg, rgba(15,15,15,0.9) 0%, rgba(5,5,5,0.9) 100%);
-            border-top: 3px solid #d35400;
-            padding: 25px; width: 300px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.6);
-            position: relative; overflow: hidden;
+        /* ИНФО О СЕРВЕРЕ */
+        .info-cards { display: flex; gap: 20px; flex-direction: column; }
+        
+        .stat-block {
+            background: rgba(10, 10, 10, 0.7);
+            border-left: 4px solid #d35400; padding: 15px 25px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.5); width: 350px;
+            backdrop-filter: blur(5px);
         }
-        .card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.02) 10px, rgba(255,255,255,0.02) 20px);
-        }
-        .card h3 { color: #fff; font-size: 18px; margin-bottom: 10px; text-transform: uppercase; position: relative; }
-        .card p { color: #95a5a6; font-size: 14px; line-height: 1.6; position: relative; }
+        .stat-label { font-family: 'Share Tech Mono', monospace; color: #e67e22; font-size: 13px; }
+        .stat-value { font-size: 26px; font-weight: 900; color: #fff; margin-top: 5px; }
 
-        /* ТЕРМИНАЛ ЗАГРУЗКИ (Живой лог) */
+        /* ТЕРМИНАЛ ЗАГРУЗКИ */
         .terminal-box {
             background: rgba(5, 5, 5, 0.85);
-            border: 1px solid #333; border-top: 3px solid #7f8c8d;
-            width: 450px; height: 100%; padding: 20px;
+            border: 1px solid #333; border-top: 3px solid #d35400;
+            width: 500px; height: 100%; padding: 20px;
             display: flex; flex-direction: column;
-            box-shadow: inset 0 0 20px rgba(0,0,0,1);
+            box-shadow: inset 0 0 20px rgba(0,0,0,1), 0 10px 20px rgba(0,0,0,0.8);
         }
         .terminal-header {
             font-family: 'Share Tech Mono', monospace; color: #bdc3c7; font-size: 14px;
             border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 10px;
+            display: flex; justify-content: space-between;
         }
+        .terminal-header span.blink { color: #d35400; animation: blinker 1s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+
         .terminal-log {
             flex-grow: 1; overflow: hidden;
             display: flex; flex-direction: column; justify-content: flex-end;
         }
         .terminal-log p {
             font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #2ecc71;
-            margin-bottom: 4px; line-height: 1.2;
+            margin-bottom: 4px; line-height: 1.3;
             text-shadow: 0 0 5px rgba(46, 204, 113, 0.4);
         }
         .terminal-log p.sys { color: #e67e22; }
 
-        /* НИЗ (Прогресс-бар) */
+        /* НИЗ */
         .bottom-panel { width: 100%; }
         .progress-header {
             display: flex; justify-content: space-between; align-items: flex-end;
             margin-bottom: 10px;
         }
-        .status-main { font-size: 20px; font-weight: 700; color: #fff; text-transform: uppercase; }
-        .percentage { font-family: 'Share Tech Mono', monospace; font-size: 28px; font-weight: 700; color: #d35400; }
+        .status-main { font-size: 18px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px;}
+        .percentage { font-family: 'Share Tech Mono', monospace; font-size: 32px; font-weight: 700; color: #d35400; }
         
         .progress-container {
             width: 100%; height: 12px; background: rgba(0,0,0,0.8);
@@ -156,7 +154,7 @@
         }
         .progress-bar {
             height: 100%; width: 0%;
-            background: #d35400;
+            background: linear-gradient(90deg, #d35400, #f1c40f);
             box-shadow: 0 0 15px #d35400;
             transition: width 0.1s linear;
         }
@@ -164,17 +162,16 @@
 </head>
 <body>
 
-    <audio id="bgMusic" autoplay loop>
-        <source src="https://upload.wikimedia.org/wikipedia/commons/3/30/The_Star_Spangled_Banner_%28United_States_Navy_Band%29.ogg" type="audio/ogg">
+    <audio id="bgMusic" loop>
+        <source src="music.mp3" type="audio/mpeg">
     </audio>
 
     <div class="bg-image"></div>
     <div class="tactical-overlay"></div>
 
-    <div class="hud-corner hud-tl"></div>
-    <div class="hud-corner hud-tr"></div>
-    <div class="hud-corner hud-bl"></div>
-    <div class="hud-corner hud-br"></div>
+    <div class="radar-container">
+        <div class="radar-sweep"></div>
+    </div>
 
     <div class="layout">
         
@@ -183,38 +180,30 @@
                 <h1>Война в <span>Ираке</span></h1>
                 <p>SECURE MILITARY NETWORK // AUTHENTICATED</p>
             </div>
-            <div class="server-stats">
-                <div class="stat-block">
-                    <div>
-                        <div class="stat-label">ОПЕРАЦИОННАЯ ЗОНА</div>
-                        <div class="stat-value" id="mapName">ПОДКЛЮЧЕНИЕ...</div>
-                    </div>
-                </div>
-                <div class="stat-block">
-                    <div>
-                        <div class="stat-label">ЛИЧНЫЙ СОСТАВ</div>
-                        <div class="stat-value" id="maxPlayers">-- / --</div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="mid-panel">
             <div class="info-cards">
-                <div class="card">
-                    <h3>РФ против Террористов</h3>
-                    <p>Асимметричный конфликт. Выбери сторону, повышай звание и получай доступ к элитному вооружению и технике подразделения.</p>
+                <div class="stat-block">
+                    <div class="stat-label">ОПЕРАЦИОННАЯ ЗОНА</div>
+                    <div class="stat-value" id="mapName">УСТАНОВКА СВЯЗИ...</div>
                 </div>
-                <div class="card">
-                    <h3>Снабжение Армии</h3>
-                    <p>Транспорт и ресурсы требуют контроля. Доставляй провизию на передовую, используй склады для поддержания боеспособности.</p>
+                <div class="stat-block">
+                    <div class="stat-label">ВМЕСТИМОСТЬ БАЗЫ</div>
+                    <div class="stat-value" id="maxPlayers">-- / --</div>
+                </div>
+                <div class="stat-block" style="border-left-color: #2ecc71;">
+                    <div class="stat-label">СИСТЕМА БЕЗОПАСНОСТИ</div>
+                    <div class="stat-value" style="color: #2ecc71;">АКТИВНА</div>
                 </div>
             </div>
 
             <div class="terminal-box">
-                <div class="terminal-header">СТАТУС: ПРИЕМ ДАННЫХ ШТАБА...</div>
+                <div class="terminal-header">
+                    СТАТУС ПОДКЛЮЧЕНИЯ... <span class="blink">REC</span>
+                </div>
                 <div class="terminal-log" id="logContainer">
-                    <p class="sys">> Установка защищенного соединения...</p>
+                    <p class="sys">> Инициализация протокола загрузки...</p>
                     <p class="sys">> Проверка целостности файлов...</p>
                 </div>
             </div>
@@ -222,7 +211,7 @@
 
         <div class="bottom-panel">
             <div class="progress-header">
-                <div class="status-main" id="statusLabel">СИНХРОНИЗАЦИЯ БАЗЫ ДАННЫХ...</div>
+                <div class="status-main" id="statusLabel">ПОЛУЧЕНИЕ СЕКРЕТНЫХ ДАННЫХ ШТАБА...</div>
                 <div class="percentage" id="percentage">0%</div>
             </div>
             <div class="progress-container">
@@ -233,38 +222,49 @@
     </div>
 
     <script>
-        document.getElementById("bgMusic").volume = 0.15;
+        var audio = document.getElementById("bgMusic");
+        audio.volume = 0.15; 
+        
+        // Принудительный запуск
+        window.addEventListener('DOMContentLoaded', function() {
+            var playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(function(error) {
+                    console.log("Ожидание взаимодействия для запуска звука...");
+                });
+            }
+        });
+
+        // Клик по экрану 100% запускает музыку (если браузер заблокировал autoplay)
+        document.body.addEventListener('click', function() {
+            audio.play();
+        });
+
         var filesTotal = 0; 
         var filesNeeded = 0;
         var logBox = document.getElementById("logContainer");
 
-        // Функция добавления строк в терминал (эффект консоли)
         function addLog(text, isSystem = false) {
             var p = document.createElement("p");
             p.innerText = "> " + text;
             if (isSystem) p.className = "sys";
             logBox.appendChild(p);
-            
-            // Удаляем старые строки, чтобы терминал не растягивался
-            if (logBox.children.length > 8) {
+            if (logBox.children.length > 9) {
                 logBox.removeChild(logBox.firstChild);
             }
         }
 
-        // Обновление данных о сервере
         function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode) {
-            document.getElementById('mapName').innerText = mapname;
+            document.getElementById('mapName').innerText = mapname.toUpperCase();
             document.getElementById('maxPlayers').innerText = maxplayers + " СЛОТОВ";
             addLog("Получены данные операции: " + mapname, true);
         }
 
-        // Смена главного статуса загрузки
         function SetStatusChanged(status) { 
             document.getElementById('statusLabel').innerText = status.toUpperCase(); 
             addLog("SYS: " + status, true);
         }
 
-        // Процесс скачивания файла
         function DownloadingFile(fileName) {
             var shortName = fileName.split('/').pop();
             addLog("GET " + shortName);
@@ -277,7 +277,6 @@
             updateProgress(); 
         }
 
-        // Обновление прогресс-бара
         function updateProgress() {
             if (filesTotal > 0) {
                 var filesDownloaded = filesTotal - filesNeeded;
