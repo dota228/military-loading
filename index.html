@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MilitaryRP Terminal - V2</title>
+    <title>MilitaryRP Terminal - V3</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     
     <style>
@@ -22,13 +22,13 @@
             100% { opacity: 1; filter: brightness(1) contrast(1); }
         }
 
-        /* БЕРЕМ КАРТИНКУ ПРЯМО ИЗ ТВОЕЙ ПАПКИ НА GITHUB */
+        /* ЗАДНИЙ ФОН */
         .bg-image {
             position: absolute; top: -5%; left: -5%; width: 110%; height: 110%;
-            background-color: #111; /* Резервный цвет */
+            background-color: #111;
             background-image: url('bg.jpg'); 
             background-size: cover; background-position: center;
-            filter: blur(4px) brightness(0.4);
+            filter: blur(4px) brightness(0.35);
             z-index: 1;
             will-change: transform; transform: translateZ(0);
             animation: panBg 30s infinite alternate ease-in-out;
@@ -39,19 +39,23 @@
             100% { transform: scale(1.05) translateZ(0); }
         }
 
-        /* Тактическая сетка и затемнение */
+        /* ТАКТИЧЕСКИЕ НАЛОЖЕНИЯ (Виньетка и Сканлайны) */
         .tactical-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: 
-                radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%),
-                linear-gradient(rgba(10, 15, 20, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-            background-size: 100% 100%, 100% 4px;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
             z-index: 2; pointer-events: none;
+        }
+        
+        .scanlines {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            z-index: 3; pointer-events: none;
         }
 
         /* АНИМИРОВАННЫЙ РАДАР */
         .radar-container {
-            position: absolute; top: 40px; right: 50px; z-index: 3;
+            position: absolute; top: 40px; right: 50px; z-index: 4;
             width: 120px; height: 120px;
             border: 2px solid rgba(211, 84, 0, 0.5);
             border-radius: 50%; background: rgba(0, 0, 0, 0.3);
@@ -72,12 +76,12 @@
         }
         @keyframes radarSpin { 100% { transform: rotate(360deg); } }
 
-        /* ОГРАНИЧИТЕЛЬ СНИЗУ */
+        /* ОСНОВНАЯ СЕТКА */
         .layout {
-            position: relative; z-index: 4;
+            position: relative; z-index: 5;
             display: flex; flex-direction: column; justify-content: space-between;
             width: 100%; height: 100%; 
-            padding: 50px 50px 130px 50px; 
+            padding: 50px 50px 80px 50px; 
         }
 
         /* ШАПКА */
@@ -97,28 +101,73 @@
         /* ЦЕНТР */
         .mid-panel {
             display: flex; justify-content: space-between; align-items: flex-end;
-            margin-bottom: 20px; height: 320px;
+            margin-bottom: 30px; height: 100%; padding-top: 50px;
+        }
+        
+        .left-column {
+            display: flex; flex-direction: column; gap: 20px;
         }
 
         /* ИНФО О СЕРВЕРЕ */
-        .info-cards { display: flex; gap: 20px; flex-direction: column; }
+        .info-cards { display: flex; gap: 15px; flex-direction: column; }
         
         .stat-block {
             background: rgba(10, 10, 10, 0.7);
             border-left: 4px solid #d35400; padding: 15px 25px;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.5); width: 350px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.5); width: 400px;
             backdrop-filter: blur(5px);
         }
         .stat-label { font-family: 'Share Tech Mono', monospace; color: #e67e22; font-size: 13px; }
         .stat-value { font-size: 26px; font-weight: 900; color: #fff; margin-top: 5px; }
 
+        /* ДОСЬЕ СОЗДАТЕЛЯ (НОВЫЙ БЛОК) */
+        .creator-card {
+            background: rgba(15, 18, 22, 0.85);
+            border: 1px solid #333; border-top: 4px solid #f1c40f;
+            width: 400px; padding: 15px;
+            display: flex; align-items: center; gap: 15px;
+            box-shadow: 5px 5px 20px rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            position: relative; overflow: hidden;
+        }
+        .creator-card::before {
+            content: ''; position: absolute; right: -20px; top: -20px;
+            width: 80px; height: 80px; background: rgba(241, 196, 15, 0.05);
+            transform: rotate(45deg); pointer-events: none;
+        }
+        .creator-avatar {
+            width: 75px; height: 75px;
+            border: 2px solid #f1c40f;
+            /* СЮДА МОЖЕШЬ ВСТАВИТЬ ПРЯМУЮ ССЫЛКУ НА СВОЮ АВАТАРКУ ИЗ СТИМА, ЕСЛИ ХОЧЕШЬ */
+            background-image: url('https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg'); 
+            background-size: cover; background-position: center;
+            position: relative; box-shadow: 0 0 10px rgba(241, 196, 15, 0.3);
+        }
+        .creator-avatar::after {
+            content: ''; position: absolute; top: -5px; left: -5px; width: 10px; height: 10px;
+            border-top: 2px solid #fff; border-left: 2px solid #fff;
+        }
+        .creator-avatar::before {
+            content: ''; position: absolute; bottom: -5px; right: -5px; width: 10px; height: 10px;
+            border-bottom: 2px solid #fff; border-right: 2px solid #fff;
+        }
+        .creator-info { display: flex; flex-direction: column; flex-grow: 1; }
+        .creator-label { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: #f1c40f; letter-spacing: 1px; }
+        .creator-name { font-size: 20px; font-weight: 900; color: #fff; text-transform: uppercase; margin: 2px 0; }
+        .creator-link { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: #95a5a6; }
+        .creator-barcode {
+            margin-top: 8px; width: 100%; height: 12px; opacity: 0.5;
+            background: repeating-linear-gradient(90deg, #fff 0, #fff 2px, transparent 2px, transparent 4px, #fff 4px, #fff 5px, transparent 5px, transparent 9px);
+        }
+
         /* ТЕРМИНАЛ ЗАГРУЗКИ */
         .terminal-box {
             background: rgba(5, 5, 5, 0.85);
             border: 1px solid #333; border-top: 3px solid #d35400;
-            width: 500px; height: 100%; padding: 20px;
+            width: 450px; height: 100%; padding: 20px;
             display: flex; flex-direction: column;
             box-shadow: inset 0 0 20px rgba(0,0,0,1), 0 10px 20px rgba(0,0,0,0.8);
+            position: relative;
         }
         .terminal-header {
             font-family: 'Share Tech Mono', monospace; color: #bdc3c7; font-size: 14px;
@@ -134,27 +183,34 @@
         }
         .terminal-log p {
             font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #2ecc71;
-            margin-bottom: 4px; line-height: 1.3;
+            margin-bottom: 5px; line-height: 1.3;
             text-shadow: 0 0 5px rgba(46, 204, 113, 0.4);
         }
         .terminal-log p.sys { color: #e67e22; }
 
-        /* НИЗ */
+        /* НИЗ (ПОЛОСА ЗАГРУЗКИ) */
         .bottom-panel { width: 100%; }
         .progress-header {
             display: flex; justify-content: space-between; align-items: flex-end;
             margin-bottom: 10px;
         }
         .status-main { font-size: 18px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px;}
-        .percentage { font-family: 'Share Tech Mono', monospace; font-size: 32px; font-weight: 700; color: #d35400; }
+        .percentage { font-family: 'Share Tech Mono', monospace; font-size: 32px; font-weight: 700; color: #d35400; text-shadow: 0 0 10px rgba(211, 84, 0, 0.5); }
         
         .progress-container {
-            width: 100%; height: 12px; background: rgba(0,0,0,0.8);
+            width: 100%; height: 16px; background: rgba(0,0,0,0.8);
             border: 1px solid #333; padding: 2px;
         }
+        /* Улучшенная полоса в стиле милитари-ленты */
         .progress-bar {
             height: 100%; width: 0%;
-            background: linear-gradient(90deg, #d35400, #f1c40f);
+            background: repeating-linear-gradient(
+                -45deg,
+                #d35400,
+                #d35400 10px,
+                #e67e22 10px,
+                #e67e22 20px
+            );
             box-shadow: 0 0 15px #d35400;
             transition: width 0.1s linear;
         }
@@ -168,6 +224,7 @@
 
     <div class="bg-image"></div>
     <div class="tactical-overlay"></div>
+    <div class="scanlines"></div>
 
     <div class="radar-container">
         <div class="radar-sweep"></div>
@@ -183,18 +240,30 @@
         </div>
 
         <div class="mid-panel">
-            <div class="info-cards">
-                <div class="stat-block">
-                    <div class="stat-label">ОПЕРАЦИОННАЯ ЗОНА</div>
-                    <div class="stat-value" id="mapName">УСТАНОВКА СВЯЗИ...</div>
+            <div class="left-column">
+                <div class="info-cards">
+                    <div class="stat-block">
+                        <div class="stat-label">ОПЕРАЦИОННАЯ ЗОНА</div>
+                        <div class="stat-value" id="mapName">УСТАНОВКА СВЯЗИ...</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="stat-label">ВМЕСТИМОСТЬ БАЗЫ</div>
+                        <div class="stat-value" id="maxPlayers">-- / --</div>
+                    </div>
+                    <div class="stat-block" style="border-left-color: #2ecc71;">
+                        <div class="stat-label">СИСТЕМА БЕЗОПАСНОСТИ</div>
+                        <div class="stat-value" style="color: #2ecc71;">АКТИВНА</div>
+                    </div>
                 </div>
-                <div class="stat-block">
-                    <div class="stat-label">ВМЕСТИМОСТЬ БАЗЫ</div>
-                    <div class="stat-value" id="maxPlayers">-- / --</div>
-                </div>
-                <div class="stat-block" style="border-left-color: #2ecc71;">
-                    <div class="stat-label">СИСТЕМА БЕЗОПАСНОСТИ</div>
-                    <div class="stat-value" style="color: #2ecc71;">АКТИВНА</div>
+
+                <div class="creator-card">
+                    <div class="creator-avatar"></div>
+                    <div class="creator-info">
+                        <div class="creator-label">ВЫСШИЙ ДОПУСК // СОЗДАТЕЛЬ</div>
+                        <div class="creator-name">dvacherofficial</div>
+                        <div class="creator-link">steamcommunity.com/id/dvacherofficial</div>
+                        <div class="creator-barcode"></div>
+                    </div>
                 </div>
             </div>
 
@@ -225,7 +294,6 @@
         var audio = document.getElementById("bgMusic");
         audio.volume = 0.15; 
         
-        // Принудительный запуск
         window.addEventListener('DOMContentLoaded', function() {
             var playPromise = audio.play();
             if (playPromise !== undefined) {
@@ -235,7 +303,6 @@
             }
         });
 
-        // Клик по экрану 100% запускает музыку (если браузер заблокировал autoplay)
         document.body.addEventListener('click', function() {
             audio.play();
         });
@@ -249,7 +316,8 @@
             p.innerText = "> " + text;
             if (isSystem) p.className = "sys";
             logBox.appendChild(p);
-            if (logBox.children.length > 9) {
+            // Увеличили количество строчек в логе до 12
+            if (logBox.children.length > 12) {
                 logBox.removeChild(logBox.firstChild);
             }
         }
